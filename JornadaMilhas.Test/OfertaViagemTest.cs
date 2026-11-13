@@ -28,10 +28,27 @@ public class OfertaViagemTest
         Periodo periodo = new Periodo(new DateTime(2026, 12, 01), new DateTime(2026, 12, 02));
         var preco = 123.45;
 
+        // act
         OfertaViagem ofertaViagem = new OfertaViagem(rota, periodo, preco);
 
         //asserts
-        Assert.Contains("A oferta de viagem não possui rota ou período válidos.", ofertaViagem.Erros.Sumario);
+        Assert.Contains("Erro: A oferta de viagem não possui uma rota válida", ofertaViagem.Erros.Sumario);
+        Assert.False(ofertaViagem.EhValido);
+    }
+
+    [Fact(DisplayName = "Validar a data de início for maior que a data final")]
+    public void OfertaViagem_DataInicioMaiorQueDataFinal()
+    {
+        // arrange
+        Rota rota = new Rota("OrigemTeste", "DestinoTeste");
+        Periodo periodo = new Periodo(new DateTime(2026, 12, 02), new DateTime(2026, 12, 01));
+        var preco = 123.4;
+
+        // act
+        OfertaViagem ofertaViagem = new OfertaViagem(rota, periodo, preco);
+
+        // assert
+        Assert.Contains("Erro: Data de ida não pode ser maior que a data de volta.", ofertaViagem.Erros.Sumario);
         Assert.False(ofertaViagem.EhValido);
     }
 }
